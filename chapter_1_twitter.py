@@ -43,8 +43,8 @@ print us_trends_set
 #############################################################
 # 1.3.4 Searching for Tweets
 #############################################################
-
-q = '#ChicagoFire'
+from urllib import unquote
+q = '#TheNewsIn4Words'
 count = 100
 search_results = twitter_api.search.tweets(q=q, count=count)
 statuses = search_results['statuses']
@@ -55,13 +55,14 @@ for _ in range(5):
     print "Length of statuses", len(statuses)
     try:
         next_results = search_results['search_metadata']['next_results']
-        # Create a dictionary from next_results, which has the following form:
-        # ?max_id=844373502757158913&q=%2523ChicagoFire&count=100&include_entities=1
-        kwargs = dict([ kv.split('=') for kv in next_results[1:].split("&") ])
-        search_results = twitter_api.search.tweets(**kwargs)
-        statuses += search_results['statuses']
     except KeyError, e: # No more results when next_results doesn't exist
         break
 
+    # Create a dictionary from next_results, which has the following form:
+    # ?max_id=313519052523986943&q=%23TheNewsIn4Words&include_entities=1
+    kwargs = dict([kv.split('=') for kv in unquote(next_results[1:]).split("&") ])
+    search_results = twitter_api.search.tweets(**kwargs)
+    statuses += search_results['statuses']
+    
 # Show one sample search result by slicing the list...
 print json.dumps(statuses[0], indent=1)
