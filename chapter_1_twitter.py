@@ -1,8 +1,5 @@
 # Chapter 1 Mining the Social Web 2nd Ed
-#############################################################
-# 1.3.3 Exploring Trending Topics
-#############################################################
- 
+
 import twitter
 from credentials import *
 
@@ -10,7 +7,12 @@ auth = twitter.oauth.OAuth(access_token, access_token_secret, consumer_key, cons
 twitter_api = twitter.Twitter(auth=auth)
 
 twitter_api = twitter.Twitter(auth=auth)
+ 
 # print twitter_api
+
+#############################################################
+# 1.3.3 Exploring Trending Topics
+#############################################################
 
 # The Yahoo! Where On Earth ID for the entire world is 1.
 # See https://dev.twitter.com/docs/api/1.1/get/trends/place and
@@ -83,3 +85,16 @@ print json.dumps(screen_names[0:5], indent=1)
 print json.dumps(hashtags[0:5], indent=1)
 print json.dumps(words[0:5], indent=1)
 
+from collections import Counter
+for item in [words, screen_names, hashtags]:
+    c = Counter(item)
+    print c.most_common()[:10] # top 10
+    print
+    
+from prettytable import PrettyTable
+for label, data in (('Word', words), ('Screen Name', screen_names), ('Hashtag', hashtags)):
+    pt = PrettyTable(field_names=[label, 'Count'])
+    c = Counter(data)
+    [pt.add_row(kv) for kv in c.most_common()[:10]]
+    pt.align[label], pt.align['Count'] = 'l', 'r' # Set column alignment
+    print pt
