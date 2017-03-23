@@ -98,3 +98,16 @@ for label, data in (('Word', words), ('Screen Name', screen_names), ('Hashtag', 
     [pt.add_row(kv) for kv in c.most_common()[:10]]
     pt.align[label], pt.align['Count'] = 'l', 'r' # Set column alignment
     print pt
+
+# A function for computing lexical diversity
+def lexical_diversity(tokens):
+    return 1.0*len(set(tokens))/len(tokens)
+# A function for computing the average number of words per tweet
+def average_words(statuses):
+    total_words = sum([ len(s.split()) for s in statuses ])
+    return 1.0*total_words/len(statuses)
+  
+print lexical_diversity(words)
+print lexical_diversity(screen_names)
+print lexical_diversity(hashtags)
+print average_words(status_texts)
